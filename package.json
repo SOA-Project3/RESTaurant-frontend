@@ -2,11 +2,14 @@
   "name": "rest-aurant",
   "version": "0.1.0",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy": "gcloud functions deploy nextjs --project soa-g6-p2 --entry-point=handler --allow-unauthenticated --trigger-http --runtime=nodejs18 --memory=128MB",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gcp-build": "npm run build"
   },
   "dependencies": {
     "react": "^18",
