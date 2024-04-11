@@ -2,25 +2,40 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import styles from "./feedback.module.css";
+import { postFeedback } from "@/services";
 const basePath = process.env.basePath;
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [response, setResponse] = useState("");
+
+  const btnTitle = isSending ? "Sending..." : "Send";
 
   const handleInputChange = (event) => {
     setFeedback(event.target.value);
+    setIsDisabled(event.target.value.length == 0);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Prevents the default form submit action (page reload)
-    console.log(feedback); // Logs the current value of the feedback state to the console
+    setIsSending(true);
+    try {
+      const result = await postFeedback(feedback);
+      setResponse(result);
+    } catch (error) {
+      console.error(error);
+      // Handle error (e.g., show an error message)
+    }
+    setIsSending(false);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.imgContainer}>
         <Image
-          src={`${basePath}/pizza.png`}
+          src={`${basePath}/pizza.svg`}
           alt=""
           fill
           className={styles.img}
@@ -38,8 +53,11 @@ const Feedback = () => {
             value={feedback}
             onChange={handleInputChange}
           ></textarea>
-          <button type="submit">Send</button>
+          {!isDisabled && <button type="submit">{btnTitle}</button>}
         </form>
+        {!!response && (
+          <div className={styles.responseContainer}>{response}</div>
+        )}
       </div>
     </div>
   );
