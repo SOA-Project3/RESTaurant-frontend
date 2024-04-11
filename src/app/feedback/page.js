@@ -27,20 +27,18 @@ const Feedback = () => {
         />
       </div>
       <div className={styles.formContainer}>
-        <div className={styles.titleContainer}>
-          ¿Qué te ha parecido la comida?
-        </div>
+        <div className={styles.titleContainer}>How was your food?</div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <textarea
             name="comment"
             id="comment"
             cols="30"
-            rows="5"
-            placeholder="Escribinos tus comentarios..."
+            rows="3"
+            placeholder="Tell us about your experience..."
             value={feedback}
             onChange={handleInputChange}
           ></textarea>
-          <button type="submit">Enviar</button>
+          <button type="submit">Send</button>
         </form>
       </div>
     </div>

@@ -1,9 +1,27 @@
 "use client";
 import { useAppContext } from "@/context";
+import { getMenu } from "@/services";
+import { useEffect } from "react";
 
 const Drinks = () => {
   const { menu, setMenu } = useAppContext();
-  return <div>{menu.dessert}</div>;
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      if (!menu) {
+        try {
+          const menuData = await getMenu();
+          setMenu(menuData);
+        } catch (error) {
+          console.error("Menu fetch error:", error.message);
+        }
+      }
+    };
+
+    if (!menu) fetchMenu();
+  }, [menu, setMenu]); // Only re-run the effect if menu or setMenu changes
+
+  return <div>Drinks</div>;
 };
 
 export default Drinks;

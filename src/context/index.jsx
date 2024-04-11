@@ -1,9 +1,9 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
 
-const AppContext = createContext<any>(undefined);
+const AppContext = createContext(undefined);
 
-export function AppWrapper({ children }: { children: React.ReactNode }) {
+export function AppWrapper({ children }) {
   const [menu, setMenu] = useState(null);
 
   return (

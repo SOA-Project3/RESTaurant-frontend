@@ -1,26 +1,26 @@
 "use client";
 import { useAppContext } from "@/context";
 import { useEffect } from "react";
+import { getMenu } from "@/services";
 
 const Home = () => {
   const { menu, setMenu } = useAppContext();
 
   useEffect(() => {
-    if (!menu) {
-      const requestOptions = {
-        method: "GET",
-        redirect: "follow",
-      };
+    const fetchMenu = async () => {
+      if (!menu) {
+        try {
+          const menuData = await getMenu();
+          setMenu(menuData);
+        } catch (error) {
+          console.error("Menu fetch error:", error.message);
+        }
+      }
+    };
 
-      fetch(
-        "https://us-central1-soa-g6-p2.cloudfunctions.net/backend/menu",
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => console.log(result))
-        .catch((error) => console.error(error));
-    }
-  }, []);
+    if (!menu) fetchMenu();
+  }, [menu, setMenu]); // Only re-run the effect if menu or setMenu changes
+
   return <div>Home</div>;
 };
 

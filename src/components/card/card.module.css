@@ -1,0 +1,29 @@
+/* src/components/card.module.css */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  margin: 16px;
+  width: 300px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.cardBody {
+  font-size: 1rem;
+  flex-grow: 1;
+  margin-bottom: 8px;
+}
+
+.cardFooter {
+  font-size: 0.875rem;
+  color: #666;
+  text-align: right;
+}
