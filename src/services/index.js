@@ -40,16 +40,35 @@ export const postFeedback = async (feedback) => {
       requestOptions
     );
 
-    // If you want to proceed with a non-JSON response:
     const result = await response.json();
-
-    // If the response is expected to be JSON, you might want to use:
-    // const result = await response.json();
 
     return result.message;
   } catch (error) {
-    // It's usually not recommended to console.error here and instead let the caller handle the error
     console.error("Error sending feedback:", error);
+    throw error; // Re-throw the error so the caller can handle it
+  }
+};
+
+export const getReservation = async (day, hour) => {
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(
+      `https://us-central1-soa-g6-p2.cloudfunctions.net/backend/suggestions/?day=${day}&hour=${hour}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error fetching suggestions:", error);
     throw error; // Re-throw the error so the caller can handle it
   }
 };
