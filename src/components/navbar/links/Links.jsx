@@ -5,19 +5,27 @@ import NavLink from "./navLink/navLink";
 const Links = () => {
   const links = [
     {
-      title: "Inicio",
+      title: "Meals",
       path: "/",
     },
     {
-      title: "Recomendaciones",
+      title: "Drinks",
+      path: "/drinks",
+    },
+    {
+      title: "Desserts",
+      path: "/desserts",
+    },
+    {
+      title: "Recomendations",
       path: "/recommendations",
     },
     {
-      title: "Reservas",
+      title: "Reservations",
       path: "/reservations",
     },
     {
-      title: "Comentarios",
+      title: "Give Feedback",
       path: "/feedback",
     },
   ];
