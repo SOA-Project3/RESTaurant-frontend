@@ -3,7 +3,7 @@ import styles from "./menu.module.css";
 const Menu = ({ menu }) => {
   return (
     <div className={styles.container}>
-      {menu.meal.map((meal) => (
+      {menu.map((meal) => (
         <div className={styles.card} key={meal.name}>
           <Card
             title={meal.name}

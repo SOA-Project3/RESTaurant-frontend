@@ -5,17 +5,15 @@ import { getMenu } from "@/services";
 import Menu from "@/components/menu/Menu";
 const Home = () => {
   const { menu, setMenu } = useAppContext();
-
-  const [fetchedMenu, setFetchedMenu] = useState(null);
+  const [meals, setMeals] = useState(null);
 
   useEffect(() => {
     const fetchMenu = async () => {
       if (!menu) {
         try {
-          const menuData = await getMenu();
-          setMenu(menuData);
-          setFetchedMenu(menuData);
-          console.log(menuData.menu.meal);
+          const data = await getMenu();
+          setMenu(data.menu);
+          setMeals(data.menu.meal);
         } catch (error) {
           console.error("Menu fetch error:", error.message);
         }
@@ -23,9 +21,10 @@ const Home = () => {
     };
 
     if (!menu) fetchMenu();
+    else setMeals(menu.meal);
   }, [menu, setMenu]); // Only re-run the effect if menu or setMenu changes
 
-  if (!!fetchedMenu) return <Menu menu={fetchedMenu.menu} />;
+  if (!!meals) return <Menu menu={meals} />;
 };
 
 export default Home;
