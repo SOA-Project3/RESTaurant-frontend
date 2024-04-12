@@ -72,3 +72,33 @@ export const getReservation = async (day, hour) => {
     throw error; // Re-throw the error so the caller can handle it
   }
 };
+
+export const getRecommendation = async (meal, drink, dessert) => {
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+
+  let url =
+    "https://us-central1-soa-g6-p2.cloudfunctions.net/backend/recommendations/?";
+
+  if (!!meal) url += `meal=${meal}&`;
+  if (!!drink) url += `drink=${drink}&`;
+  if (!!dessert) url += `dessert=${dessert}&`;
+
+  url = url.slice(0, -1);
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error fetching suggestions:", error);
+    throw error; // Re-throw the error so the caller can handle it
+  }
+};
