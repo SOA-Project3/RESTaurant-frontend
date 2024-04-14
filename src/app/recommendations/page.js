@@ -33,6 +33,7 @@ const Recommendations = () => {
       handleResponse(result);
     } catch (error) {
       console.error(error);
+      setResponse("Couldn't find a recommendation for that combination.");
       // Handle error (e.g., show an error message)
     }
     setIsSending(false);
@@ -99,7 +100,7 @@ const Recommendations = () => {
     <div className={styles.container}>
       <div className={styles.imgContainer}>
         <Image
-          src={`${basePath}/pizza.svg`}
+          src={`${basePath}/chef.svg`}
           alt=""
           fill
           className={styles.img}

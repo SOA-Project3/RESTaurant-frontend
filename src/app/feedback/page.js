@@ -26,6 +26,8 @@ const Feedback = () => {
       setResponse(result);
     } catch (error) {
       console.error(error);
+      setResponse("An error occurred. Please try again later.");
+
       // Handle error (e.g., show an error message)
     }
     setIsSending(false);

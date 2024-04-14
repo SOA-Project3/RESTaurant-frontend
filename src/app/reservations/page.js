@@ -44,6 +44,7 @@ const Reservations = () => {
       handleResponse(result);
     } catch (error) {
       console.error(error);
+      setResponse("An error occurred. Please try again later.");
       // Handle error (e.g., show an error message)
     }
     setIsSending(false);
@@ -62,7 +63,7 @@ const Reservations = () => {
     <div className={styles.container}>
       <div className={styles.imgContainer}>
         <Image
-          src={`${basePath}/pizza.svg`}
+          src={`${basePath}/timer.svg`}
           alt=""
           fill
           className={styles.img}
