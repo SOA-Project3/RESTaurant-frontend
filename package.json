@@ -4,7 +4,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5555",
     "build": "next build",
     "deploy": "gcloud functions deploy nextjs --project soa-g6-p2 --entry-point=handler --allow-unauthenticated --trigger-http --runtime=nodejs18 --memory=128MB",
     "start": "next start",
@@ -12,11 +12,14 @@
     "gcp-build": "npm run build"
   },
   "dependencies": {
+    "next": "14.1.4",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.1.4"
+    "react-datepicker": "^6.6.0",
+    "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/node": "20.12.7",
+    "@types/react": "18.2.76",
     "eslint": "^8",
     "eslint-config-next": "14.1.4"
   }
