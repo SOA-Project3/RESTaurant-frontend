@@ -1,8 +1,9 @@
 import Link from "next/link";
 import styles from "./links.module.css";
 import NavLink from "./navLink/navLink";
+import { handleLogout } from "@/lib/action";
 
-const Links = () => {
+const Links = ({ session }) => {
   const links = [
     {
       title: "Meals",
@@ -28,6 +29,10 @@ const Links = () => {
       title: "Give Feedback",
       path: "/feedback",
     },
+    {
+      title: "Agenda",
+      path: "/agenda",
+    },
   ];
 
   return (
@@ -35,6 +40,18 @@ const Links = () => {
       {links.map((link) => (
         <NavLink item={link} key={link.title} />
       ))}
+      {session?.user ? (
+        <>
+          {session.user?.isAdmin && (
+            <NavLink item={{ title: "Admin", path: "/admin" }} />
+          )}
+          <form action={handleLogout}>
+            <button className={styles.logout}>Logout</button>
+          </form>
+        </>
+      ) : (
+        <NavLink item={{ title: "Login", path: "/login" }} />
+      )}
     </div>
   );
 };
