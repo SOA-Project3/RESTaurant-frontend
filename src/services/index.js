@@ -1,19 +1,29 @@
+import {
+  MENU_URL,
+  SEND_FEEDBACK_URL,
+  GET_FEEDBACK_URL,
+  RECOMMENDATIONS_URL,
+  SUGGESTIONS_URL,
+  REGISTER_URL,
+  LOGIN_URL,
+} from "@/constants";
+
+async function handleResponse(response) {
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    // Handle errors if response not ok
+    const error = new Error(`Error ${response.status}: ${response.statusText}`);
+    error.response = response;
+    throw error;
+  }
+}
 export const getMenu = async () => {
   try {
-    const response = await fetch(
-      "https://us-central1-soa-g6-p2.cloudfunctions.net/backend/menu"
-    );
-    if (response.ok) {
-      const menuData = await response.json();
-      return menuData;
-    } else {
-      // Handle errors if response not ok
-      const error = new Error(
-        `Error ${response.status}: ${response.statusText}`
-      );
-      error.response = response;
-      throw error;
-    }
+    const response = await fetch(MENU_URL);
+    const menuData = await handleResponse(response);
+    return menuData;
   } catch (error) {
     // Handle network errors or other fetch errors
     throw new Error(`Network error: ${error.message}`);
@@ -35,13 +45,9 @@ export const postFeedback = async (feedback) => {
   };
 
   try {
-    const response = await fetch(
-      "https://us-central1-soa-g6-p2.cloudfunctions.net/backend/sendFeedback",
-      requestOptions
-    );
+    const response = await fetch(SEND_FEEDBACK_URL, requestOptions);
 
-    const result = await response.json();
-
+    const result = await handleResponse(response);
     return result.message;
   } catch (error) {
     console.error("Error sending feedback:", error);
@@ -57,15 +63,11 @@ export const getReservation = async (day, hour) => {
 
   try {
     const response = await fetch(
-      `https://us-central1-soa-g6-p2.cloudfunctions.net/backend/suggestions/?day=${day}&hour=${hour}`,
+      `${SUGGESTIONS_URL}/?day=${day}&hour=${hour}`,
       requestOptions
     );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
+    const result = await handleResponse(response);
     return result;
   } catch (error) {
     console.error("Error fetching suggestions:", error);
@@ -79,26 +81,77 @@ export const getRecommendation = async (meal, drink, dessert) => {
     redirect: "follow",
   };
 
-  let url =
-    "https://us-central1-soa-g6-p2.cloudfunctions.net/backend/recommendations/?";
+  let url = RECOMMENDATIONS_URL;
 
-  if (!!meal) url += `meal=${meal}&`;
-  if (!!drink) url += `drink=${drink}&`;
-  if (!!dessert) url += `dessert=${dessert}&`;
+  if (!!meal) url += `/?meal=${meal}&`;
+  if (!!drink) url += `/?drink=${drink}&`;
+  if (!!dessert) url += `/?dessert=${dessert}&`;
 
   url = url.slice(0, -1);
 
   try {
     const response = await fetch(url, requestOptions);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
+    const result = await handleResponse(response);
     return result;
   } catch (error) {
     console.error("Error fetching suggestions:", error);
     throw error; // Re-throw the error so the caller can handle it
+  }
+};
+
+export const postRegister = async (name, email, password, role) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    Id: email,
+    Fullname: name,
+    Rol: role,
+    Password: password,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(REGISTER_URL, requestOptions);
+
+    const result = await handleResponse(response);
+    return result;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    throw error;
+  }
+};
+
+export const postLogin = async (email, password) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    Id: email,
+    Password: password,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(LOGIN_URL, requestOptions);
+
+    const result = await handleResponse(response);
+    return result;
+  } catch (error) {
+    console.error("Error authenticating user:", error);
+    throw error;
   }
 };
