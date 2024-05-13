@@ -4,6 +4,7 @@ This project is built using React.js and Next.js.
 
 ```
 npm install
+npm install @syncfusion/ej2-react-grids --save
 ```
 
 ### To run in local environment

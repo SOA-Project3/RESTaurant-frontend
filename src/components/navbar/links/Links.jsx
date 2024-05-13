@@ -30,8 +30,8 @@ const Links = ({ session }) => {
       path: "/feedback",
     },
     {
-      title: "Agenda",
-      path: "/agenda",
+      title: "Schedule",
+      path: "/schedule",
     },
   ];
 

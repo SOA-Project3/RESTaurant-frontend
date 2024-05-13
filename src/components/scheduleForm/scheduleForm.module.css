@@ -1,0 +1,39 @@
+.formContainer {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.ScheduleForm label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.ScheduleForm input[type="time"],
+.ScheduleForm input[type="number"],
+.ScheduleForm input[type="text"],
+.ScheduleForm button {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.ScheduleForm button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.ScheduleForm button:hover {
+  background-color: #45a049; /* Darker Green */
+}
