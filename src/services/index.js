@@ -6,6 +6,7 @@ import {
   SUGGESTIONS_URL,
   REGISTER_URL,
   LOGIN_URL,
+  BAD_REQUEST,
 } from "@/constants";
 
 async function handleResponse(response) {
@@ -13,12 +14,11 @@ async function handleResponse(response) {
     const data = await response.json();
     return data;
   } else {
-    // Handle errors if response not ok
-    const error = new Error(`Error ${response.status}: ${response.statusText}`);
-    error.response = response;
-    throw error;
+    const errMssg = await response.text();
+    throw new Error(errMssg);
   }
 }
+
 export const getMenu = async () => {
   try {
     const response = await fetch(MENU_URL);
@@ -147,7 +147,6 @@ export const postLogin = async (email, password) => {
 
   try {
     const response = await fetch(LOGIN_URL, requestOptions);
-
     const result = await handleResponse(response);
     return result;
   } catch (error) {

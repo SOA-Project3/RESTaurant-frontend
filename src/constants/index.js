@@ -8,3 +8,6 @@ export const GET_FEEDBACK_URL = `${BASE_URL}/getFeedback`;
 export const SEND_FEEDBACK_URL = `${BASE_URL}/sendFeedback`;
 export const REGISTER_URL = `${BASE_URL}/register`;
 export const LOGIN_URL = `${BASE_URL}/login`;
+
+//statud code
+export const BAD_REQUEST = 400;

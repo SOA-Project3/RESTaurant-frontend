@@ -1,10 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { postRegister } from "@/services";
+import { postRegister, postLogin } from "@/services";
 import bcrypt from "bcryptjs";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const sessionOptions = {
   password: process.env.SECRET_KEY,
@@ -23,16 +24,19 @@ export const getSession = async () => {
 
 export const login = async (prevState, formData) => {
   try {
+    const session = await getIronSession(cookies(), sessionOptions);
     const { email, password } = Object.fromEntries(formData);
-    const hashedPassword = await encryptPassword(password);
-    console.log(email, hashedPassword);
+    console.log("Logging in user: ", email, password);
+    const user = await postLogin(email, password);
+    console.log(user);
+
+    // set session properties
+    session.userId = user.id;
+    session.isLoggedIn = true;
+    await session.save();
   } catch (err) {
     console.log(err);
-
-    if (err.message.includes("CredentialsSignin")) {
-      return { error: "Invalid username or password" };
-    }
-    throw err;
+    return { error: err.toString() };
   }
 };
 
@@ -40,25 +44,24 @@ export const registerUser = async (previousState, formData) => {
   const { name, email, password, passwordRepeat } =
     Object.fromEntries(formData);
 
-  if (password !== passwordRepeat) {
-    return { error: "Passwords do not match" };
-  }
+  if (!name) return { error: "Name is required!" };
+  if (!email) return { error: "Email is required!" };
+  if (password !== passwordRepeat) return { error: "Passwords do not match!" };
 
   try {
-    const hashedPassword = await encryptPassword(password);
-    console.log("Registering user: ", name, email, hashedPassword);
-    await postRegister(name, email, hashedPassword, "User");
+    console.log("Registering user: ", name, email, password);
+    await postRegister(name, email, password, "User");
     console.log("User registered successfully...");
     return { success: true };
   } catch (err) {
     console.log(err);
-    return { error: "An error ocurred, please try again later..." };
+    return { error: err.toString() };
   }
 };
 
 export const handleLogout = async () => {
   //TODO
-  console.log("lougout");
+  console.log("logout");
 };
 
 async function encryptPassword(password) {
