@@ -7,6 +7,7 @@ import {
   REGISTER_URL,
   LOGIN_URL,
   BAD_REQUEST,
+  GET_USER_URL,
 } from "@/constants";
 
 async function handleResponse(response) {
@@ -71,7 +72,7 @@ export const getReservation = async (day, hour) => {
     return result;
   } catch (error) {
     console.error("Error fetching suggestions:", error);
-    throw error; // Re-throw the error so the caller can handle it
+    throw error;
   }
 };
 
@@ -151,6 +152,23 @@ export const postLogin = async (email, password) => {
     return result;
   } catch (error) {
     console.error("Error authenticating user:", error);
+    throw error;
+  }
+};
+
+export const getUser = async (email) => {
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(`${GET_USER_URL}?Id=${email}`, requestOptions);
+
+    const result = await handleResponse(response);
+    return result;
+  } catch (error) {
+    console.error("Error fetching suggestions:", error);
     throw error;
   }
 };

@@ -22,3 +22,18 @@
   border: none;
   border-radius: 5px;
 }
+
+.error {
+  color: coral;
+  font-size: 18px;
+}
+.forgotWrapper {
+  display: flex;
+  text-align: left;
+}
+
+.forgot {
+  color: var(--textSoft);
+  font-size: 15px;
+  text-decoration: underline;
+}

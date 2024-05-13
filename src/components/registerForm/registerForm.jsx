@@ -27,7 +27,7 @@ const RegisterForm = () => {
         name="passwordRepeat"
       />
       <button>Register</button>
-      {state?.error}
+      {<p className={styles.error}>{state?.error}</p>}
       <Link href="/login">
         Already have an account? <b>Login</b>
       </Link>

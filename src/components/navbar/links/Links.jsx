@@ -1,11 +1,10 @@
 import Link from "next/link";
 import styles from "./links.module.css";
 import NavLink from "./navLink/navLink";
-import { handleLogout } from "@/lib/action";
 import LogoutForm from "@/components/logoutForm/logoutForm";
 
 const Links = ({ session }) => {
-  const links = [
+  const defaultLinks = [
     {
       title: "Meals",
       path: "/",
@@ -22,6 +21,9 @@ const Links = ({ session }) => {
       title: "Recomendations",
       path: "/recommendations",
     },
+  ];
+
+  const loggedInLinks = [
     {
       title: "Reservations",
       path: "/reservations",
@@ -30,21 +32,20 @@ const Links = ({ session }) => {
       title: "Give Feedback",
       path: "/feedback",
     },
-    {
-      title: "Agenda",
-      path: "/agenda",
-    },
   ];
 
   return (
     <div className={styles.links}>
-      {links.map((link) => (
+      {defaultLinks.map((link) => (
         <NavLink item={link} key={link.title} />
       ))}
       {session?.isLoggedIn ? (
         <>
-          {session.user?.isAdmin && (
-            <NavLink item={{ title: "Admin", path: "/admin" }} />
+          {loggedInLinks.map((link) => (
+            <NavLink item={link} key={link.title} />
+          ))}
+          {session.role === "Admin" && (
+            <NavLink item={{ title: "Agenda", path: "/agenda" }} />
           )}
           <LogoutForm />
         </>

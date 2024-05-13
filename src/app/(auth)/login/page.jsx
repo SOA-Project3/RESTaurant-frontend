@@ -9,6 +9,7 @@ const Login = async () => {
   if (session.isLoggedIn) {
     redirect("/");
   }
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>

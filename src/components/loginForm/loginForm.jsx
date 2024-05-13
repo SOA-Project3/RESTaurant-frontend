@@ -10,10 +10,15 @@ const LoginForm = () => {
 
   return (
     <form className={styles.form} action={formAction}>
-      <input type="text" required placeholder="Email" name="email" />
-      <input type="password" required placeholder="Password" name="password" />
+      <input type="text" placeholder="Email" name="email" />
+      <input type="password" placeholder="Password" name="password" />
+      <div className={styles.forgotWrapper}>
+        <Link className={styles.forgot} href="/forgot">
+          Forgot your password?
+        </Link>
+      </div>
       <button>Login</button>
-      {state?.error}
+      {<p className={styles.error}>{state?.error}</p>}
       <Link href="/register">
         {"Don't have an account?"} <b>Register</b>
       </Link>
