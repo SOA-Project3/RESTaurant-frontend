@@ -44,7 +44,7 @@ const Links = ({ session }) => {
           {loggedInLinks.map((link) => (
             <NavLink item={link} key={link.title} />
           ))}
-          {session.role === "Admin" && (
+          {session.isAdmin && (
             <NavLink item={{ title: "Agenda", path: "/agenda" }} />
           )}
           <LogoutForm />
