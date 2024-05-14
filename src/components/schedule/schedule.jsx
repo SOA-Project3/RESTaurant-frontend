@@ -1,4 +1,5 @@
 "use client";
+import { useAppContext } from "@/context";
 import { useEffect, useState } from "react";
 import {
   getAvailableSchedules,
@@ -33,10 +34,6 @@ const Schedule = () => {
     };
 
     fetchData();
-
-    const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleAddAppointment = async (date, time) => {
@@ -48,12 +45,18 @@ const Schedule = () => {
         const datetime = `${date.toISOString().slice(0, 10)}T${time}:00`;
         await createScheduleSlot(datetime);
         console.log("Appointment added successfully.");
+        setTimeout(async () => {
+          const updateAvailableData = await getAvailableSchedules();
+          const updateBookedData = await getBookedSchedules();
+          setScheduleAvailableData(updateAvailableData);
+          setScheduleBookedData(updateBookedData);
+        }, 6000);
       } catch (error) {
         console.error("Failed to add appointment:", error);
       }
     }
   };
-
+  
   const handleDeleteAppointment = async (id) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this available slot?"
@@ -62,11 +65,18 @@ const Schedule = () => {
       try {
         await deleteScheduleSlot(id);
         console.log("Available slot with ID:", id, "deleted successfully.");
+        setTimeout(async () => {
+          const updateAvailableData = await getAvailableSchedules();
+          const updateBookedData = await getBookedSchedules();
+          setScheduleAvailableData(updateAvailableData);
+          setScheduleBookedData(updateBookedData);
+        }, 6000); 
       } catch (error) {
         console.error("Failed to delete available slot with ID:", id, error);
       }
     }
   };
+  
 
   const handleRetry = () => {
     setIsLoading(true);

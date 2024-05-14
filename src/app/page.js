@@ -7,7 +7,6 @@ import Menu from "@/components/menu/Menu";
 
 
 const Home = () => {
-  console.log(process.env.KEY_LICENSE);
 
   const { menu, setMenu } = useAppContext(); // react context to handle menu as an app-wide variable
   const [meals, setMeals] = useState(null); // state that handles meals in screen

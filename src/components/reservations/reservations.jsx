@@ -1,6 +1,5 @@
 "use client";
 import { getSession } from "@/lib/action";
-import { useAppContext } from "@/context";
 import { useEffect, useState } from "react";
 import {
   getAvailableSchedules,
@@ -12,8 +11,6 @@ import {
 import ScheduleBook from "@/components/scheduleBook/ScheduleBook";
 import ScheduleCancel from "@/components/scheduleCancel/ScheduleCancel";
 import styles from "./reservations.module.css";
-const basePath = process.env.basePath;
-import Image from "next/image";
 
 const Reservations = () => {
   const [session, setSession] = useState(null);
@@ -21,7 +18,6 @@ const Reservations = () => {
   const [scheduleCancelData, setScheduleCancelData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { showAlert } = useAppContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,11 +38,7 @@ const Reservations = () => {
       }
     };
 
-    fetchData();
-
-    const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(interval);
+    fetchData();;
   }, []);
 
   const handleBookAppointment = async (id) => {
@@ -55,50 +47,62 @@ const Reservations = () => {
         prompt("Please enter the number of people for the reservation:", "1"),
         10
       );
-
+  
       if (isNaN(peopleQuantity) || peopleQuantity <= 0) {
         alert("Please enter a valid number of people.");
         return;
       }
-
+  
       const isConfirmed = window.confirm(
         "Are you sure you want to book this reservation?"
       );
-
+  
       if (isConfirmed) {
         await bookScheduleSlot(session.userId, id, peopleQuantity);
         console.log("Booked reservation with ID:", id);
+        setTimeout(async () => {
+          const updatedBookData = await getAvailableSchedules();
+          const updatedCancelData = await getUserSchedules(session.userId);
+          setScheduleBookData(updatedBookData);
+          setScheduleCancelData(updatedCancelData);
+        }, 2000); // 2 seconds delay
       }
     } catch (error) {
       console.error("Failed to book reservation with ID:", id, error);
     }
   };
-
+  
   const handleEditAppointment = async (id, userid) => {
     try {
       const newQuantity = parseInt(
         prompt("Please enter the new quantity for the appointment:", "1"),
         10
       );
-
+  
       if (isNaN(newQuantity) || newQuantity <= 0) {
         alert("Please enter a valid number for the new quantity.");
         return;
       }
-
+  
       const isConfirmed = window.confirm(
         "Are you sure you want to update the quantity for this appointment?"
       );
-
+  
       if (isConfirmed) {
         await updateScheduleSlotQuantity(id, newQuantity, userid);
         console.log("Appointment with ID:", id, "updated successfully.");
+        setTimeout(async () => {
+          const updatedBookData = await getAvailableSchedules();
+          const updatedCancelData = await getUserSchedules(session.userId);
+          setScheduleBookData(updatedBookData);
+          setScheduleCancelData(updatedCancelData);
+        }, 2000); // 2 seconds delay
       }
     } catch (error) {
       console.error("Failed to update appointment with ID:", id, error);
     }
   };
-
+  
   const handleCancelAppointment = async (id, userid) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to cancel this reservation?"
@@ -113,15 +117,18 @@ const Reservations = () => {
           userid,
           "cancelled successfully."
         );
+        setTimeout(async () => {
+          const updatedBookData = await getAvailableSchedules();
+          const updatedCancelData = await getUserSchedules(session.userId);
+          setScheduleBookData(updatedBookData);
+          setScheduleCancelData(updatedCancelData);
+        }, 2000); // 2 seconds delay
       } catch (error) {
-        console.error(
-          "Failed to cancel booked reservation with ID:",
-          id,
-          error
-        );
+        console.error("Failed to cancel booked reservation with ID:", id, error);
       }
     }
   };
+  
 
   const handleRetry = () => {
     setIsLoading(true);
