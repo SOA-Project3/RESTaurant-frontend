@@ -10,3 +10,5 @@ export const REGISTER_URL = `${BASE_URL}/register`;
 export const LOGIN_URL = `${BASE_URL}/login`;
 export const GET_USER_URL = `${BASE_URL}/getUserById`;
 export const RESET_PWD_URL = `${BASE_URL}/resetPassword`;
+export const UPDATE_PWD_URL = `${BASE_URL}/updatePassword`;
+export const DELETE_ACCOUNT_URL = `${BASE_URL}/deleteUser`;

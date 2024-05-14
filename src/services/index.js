@@ -8,6 +8,8 @@ import {
   LOGIN_URL,
   GET_USER_URL,
   RESET_PWD_URL,
+  UPDATE_PWD_URL,
+  DELETE_ACCOUNT_URL,
 } from "@/constants";
 
 /**
@@ -201,6 +203,11 @@ export const getUser = async (email) => {
   }
 };
 
+/**
+ * Resets password in DB. Assigns new password and sends it via email
+ * @param {*} email
+ * @returns
+ */
 export const resetPassword = async (email) => {
   const requestOptions = {
     method: "GET",
@@ -209,6 +216,61 @@ export const resetPassword = async (email) => {
   try {
     const response = await fetch(
       `${RESET_PWD_URL}?Id=${email}`,
+      requestOptions
+    );
+    const result = await handleResponse(response);
+    return result;
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error;
+  }
+};
+
+/**
+ * Set a new password
+ * @param {*} email 
+ * @param {*} password 
+ * @returns 
+ */
+export const setPassword = async (email, password) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    Id: email,
+    Password: password,
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(UPDATE_PWD_URL, requestOptions);
+    const result = await handleResponse(response);
+    return result;
+  } catch (error) {
+    console.error("Error updating user password:", error);
+    throw error;
+  }
+}
+
+/**
+ * Remove user from DB
+ * @param {*} email
+ * @returns
+ */
+export const deleteUser = async (email) => {
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+  try {
+    const response = await fetch(
+      `${DELETE_ACCOUNT_URL}?Id=${email}`,
       requestOptions
     );
     const result = await handleResponse(response);

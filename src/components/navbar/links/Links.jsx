@@ -47,6 +47,7 @@ const Links = ({ session }) => {
           {session.isAdmin && (
             <NavLink item={{ title: "Agenda", path: "/agenda" }} />
           )}
+          <NavLink item={{ title: "Profile", path: "/profile" }} />
           <LogoutForm />
         </>
       ) : (

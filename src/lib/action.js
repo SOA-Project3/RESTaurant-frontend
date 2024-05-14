@@ -1,7 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { postRegister, getUser, resetPassword } from "@/services";
+import {
+  postRegister,
+  getUser,
+  resetPassword,
+  deleteUser,
+  setPassword,
+} from "@/services";
 import bcrypt from "bcryptjs";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
@@ -54,8 +59,9 @@ export const login = async (prevState, formData) => {
     const session = await getIronSession(cookies(), sessionOptions);
 
     // set session properties
-    session.userId = user.id;
-    session.name = user.name;
+    session.userId = user.Id;
+    session.name = user.Fullname;
+    session.password = user.Password;
     session.isLoggedIn = true;
     session.isAdmin = user.Rol === "Admin";
 
@@ -139,4 +145,72 @@ export const handleForgot = async (previousState, formData) => {
     // show error in UI
     return { error: err.toString() };
   }
+};
+
+/**
+ * Set new password
+ * @param {*} previousState
+ * @param {*} formData
+ * @returns
+ */
+export const updatePassword = async (previousState, formData) => {
+  // get form data
+  const { oldPassword, newPassword } = Object.fromEntries(formData);
+
+  // form validations
+  if (!oldPassword) return { error: "Old password is required!" };
+  if (!newPassword) return { error: "New password is required!" };
+
+  try {
+    //get current session
+    const session = await getIronSession(cookies(), sessionOptions);
+
+    // compare password with hashed
+    const isPasswordCorrect = await bcrypt.compare(
+      oldPassword,
+      session.password
+    );
+
+    if (!isPasswordCorrect) return { error: "Incorrect password" };
+
+    //encrypt password
+    const hashedPassword = await encryptPassword(newPassword);
+
+    // update user's password
+    await setPassword(session.userId, hashedPassword);
+
+    //update session password
+    session.password = hashedPassword;
+    await session.save();
+
+    return { success: true };
+  } catch (err) {
+    console.log(err);
+    // show error in UI
+    return { error: err.toString() };
+  }
+};
+
+/**
+ * Delete the user's account
+ */
+export const deleteAccount = async () => {
+  try {
+    // get user email
+    const session = await getIronSession(cookies(), sessionOptions);
+    const email = session.userId;
+
+    try {
+      // delete account service
+      await deleteUser(email);
+
+      // remove session
+      session.destroy();
+      return { success: true };
+    } catch (err) {
+      console.log(err);
+      // show error in UI
+      return { error: err.toString() };
+    }
+  } catch (error) {}
 };
