@@ -8,11 +8,11 @@ const ScheduleDelBooked = ({ appointments, onDelete }) => {
   return (
     <div className={styles.scheduleContainer}>
       <ul className={styles.scheduleList}>
-        {appointments.map((appointment) => (
+        {Array.isArray(appointments.message) && appointments.message.map((appointment) => (
           <li key={appointment.Id} className={styles.appointmentItem}>
             <div className={styles.appointmentDetails}>
-              <div>Date: {new Date(appointment.Date).toLocaleDateString()}</div>
-              <div>Time: {new Date(appointment.Time).toLocaleTimeString()}</div>
+              <div>Date: {new Date(appointment.DateTime).toISOString().slice(0, 10)}</div>
+              <div>Time: {new Date(appointment.DateTime).toISOString().slice(11, 19)}</div>
               <div>People Quantity: {appointment.PeopleQuantity}</div>
               <div>User ID: {appointment.UserId}</div>
             </div>

@@ -1,39 +1,55 @@
 .formContainer {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.formGroup {
+  margin-top: 20px; /* Top margin */
   margin-bottom: 20px;
 }
 
-.ScheduleForm label {
-  display: block;
-  margin-bottom: 5px;
+.formGroup {
+  margin-bottom: 30px; /* Increased vertical space */
+  display: flex;
+  align-items: center; /* Align items vertically */
 }
 
-.ScheduleForm input[type="time"],
-.ScheduleForm input[type="number"],
-.ScheduleForm input[type="text"],
-.ScheduleForm button {
-  width: 100%;
-  padding: 8px;
-  font-size: 16px;
+.label {
+  margin-right: 20px; /* Increased horizontal space */
+}
+
+.h2Margin {
+  margin-bottom: 20px; /* Bottom margin for h2 */
+}
+
+
+.datePicker {
+  padding: 10px; /* Increased padding */
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+  width: 150px; /* Increased width */
+  font-size: 16px; /* Bigger text size */
+  text-align: center; /* Center align text */
 }
 
-.ScheduleForm button {
+.timePicker {
+  padding: 10px; /* Increased padding */
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 150px; /* Increased width */
+  font-size: 16px; /* Bigger text size */
+  text-align: center; /* Center align text */
+}
+
+.addButton {
   background-color: #4CAF50; /* Green */
   border: none;
   color: white;
+  padding: 12px 24px; /* Increased padding */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
   font-size: 16px;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.ScheduleForm button:hover {
+.addButton:hover {
   background-color: #45a049; /* Darker Green */
 }

@@ -220,3 +220,101 @@ export const deleteScheduleSlot = async (scheduleSlotId) => {
     throw error; // Re-throw the error so the caller can handle it
   }
 };
+
+
+export const cancelScheduleSlot = async (scheduleSlotId, userId) => {
+  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/cancelScheduleSlot?scheduleSlotId=${scheduleSlotId}&userId=${userId}`;
+
+  const requestOptions = {
+    method: "PUT",
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error cancelling schedule slot:", error);
+    throw error; // Re-throw the error so the caller can handle it
+  }
+};
+
+export const bookScheduleSlot = async (userId, scheduleSlotId, peopleQuantity) => {
+  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/bookScheduleSlot?userId=${userId}&scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}`;
+
+  const requestOptions = {
+    method: "PUT",
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error booking schedule slot:", error);
+    throw error; // Re-throw the error so the caller can handle it
+  }
+};
+
+export const updateScheduleSlotQuantity = async (scheduleSlotId, peopleQuantity, userId) => {
+  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/updateScheduleSlotQuantity?scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}&userId=${userId}`;
+
+  const requestOptions = {
+    method: "PUT",
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error updating schedule slot quantity:", error);
+    throw error; // Re-throw the error so the caller can handle it
+  }
+};
+
+export const createScheduleSlot = async (datetime) => {
+  const url = `http://us-central1-soa-gr6-p3.cloudfunctions.net/backend/createScheduleSlot?datetime=${datetime}`;
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ datetime }),
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error creating schedule slot:", error);
+    throw error; // Re-throw the error so the caller can handle it
+  }
+};
+

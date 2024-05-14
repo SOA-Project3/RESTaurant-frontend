@@ -1,73 +1,73 @@
 "use client";
-import { useAppContext } from "@/context";
 import { useEffect, useState } from "react";
-import { getAvailableSchedules, getBookedSchedules, deleteScheduleSlot } from "@/services";
+import { getAvailableSchedules, getBookedSchedules, deleteScheduleSlot, createScheduleSlot } from "@/services";
 import ScheduleDelBooked from "@/components/scheduleDelBooked/ScheduleDelBooked";
 import ScheduleDelAvailable from "@/components/scheduleDelAvailable/ScheduleDelAvailable";
 import ScheduleForm from "@/components/scheduleForm/ScheduleForm";
 import styles from "./schedule.module.css";
-const basePath = process.env.basePath;
-import Image from "next/image";
-
 
 const Schedule = () => {
   const [scheduleAvailableData, setScheduleAvailableData] = useState(null);
   const [scheduleBookedData, setScheduleBookedData] = useState(null);
-  const { showAlert } = useAppContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleAddAppointment = (newAppointment) => {
-    setScheduleAvailableData([...scheduleAvailableData, newAppointment]);
-  };
-
-  const handleDeleteAppointment = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this appointment?");
-    if (isConfirmed) {
-      try {
-        await deleteScheduleSlot(id);
-        console.log("Booked appointment with ID:", id, "deleted successfully.");
-      } catch (error) {
-        console.error("Failed to delete booked appointment with ID:", id, error);
-      }
-    }
-  };
-  
-
-  const handleDeleteBookedAppointment = async (id) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this appointment?");
-    if (isConfirmed) {
-      try {
-        await deleteScheduleSlot(id);
-        console.log("Booked appointment with ID:", id, "deleted successfully.");
-      } catch (error) {
-        console.error("Failed to delete booked appointment with ID:", id, error);
-      }
-    }
-  };
-  
   useEffect(() => {
-    const fetchScheduleAvailable = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAvailableSchedules();
-        setScheduleAvailableData(data); // Update state with fetched data
+        const availableData = await getAvailableSchedules();
+        const bookedData = await getBookedSchedules();
+        setScheduleAvailableData(availableData);
+        setScheduleBookedData(bookedData);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Available Schedule fetch error:", error.message);
+        console.error("Error fetching schedule data:", error.message);
+        setError(error.message);
+        setIsLoading(false);
       }
     };
 
-    const fetchScheduleBooked = async () => {
-      try {
-        const data = await getBookedSchedules();
-        setScheduleBookedData(data); // Update state with fetched data
-      } catch (error) {
-        console.error("Booked Schedule fetch error:", error.message);
-      }
-    }
+    fetchData();
 
-    fetchScheduleAvailable();
-    fetchScheduleBooked();
+    const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
-  if (!scheduleAvailableData || !scheduleBookedData) return null; 
+  const handleAddAppointment = async (date, time) => {
+    const isConfirmed = window.confirm("Are you sure you want to add this available slot?");
+    if (isConfirmed) {
+      try {
+        const datetime = `${date.toISOString().slice(0, 10)}T${time}:00`;
+        await createScheduleSlot(datetime);
+        console.log("Appointment added successfully.");
+      } catch (error) {
+        console.error("Failed to add appointment:", error);
+      }
+    }
+  };
+
+  const handleDeleteAppointment = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this available slot?");
+    if (isConfirmed) {
+      try {
+        await deleteScheduleSlot(id);
+        console.log("Available slot with ID:", id, "deleted successfully.");
+      } catch (error) {
+        console.error("Failed to delete available slot with ID:", id, error);
+      }
+    }
+  };
+
+  const handleRetry = () => {
+    setIsLoading(true);
+    setError(null);
+    fetchData();
+  };
+
+  if (isLoading) return <div className={styles.loading}>Loading...</div>;
+  if (error) return <div>Error: {error}<button onClick={handleRetry}>Retry</button></div>;
+  if (!scheduleAvailableData || !scheduleBookedData) return null;
 
   return (
     <div className={styles.container}>
@@ -78,7 +78,7 @@ const Schedule = () => {
         <div className={styles.scheduleContainer}>
           <h2>Booked Slots</h2>
           <div className={styles.scrollableContainer}>
-            <ScheduleDelBooked appointments={scheduleBookedData} onDelete={handleDeleteBookedAppointment} />
+            <ScheduleDelBooked appointments={scheduleBookedData} onDelete={handleDeleteAppointment} />
           </div>
         </div>
       </div>

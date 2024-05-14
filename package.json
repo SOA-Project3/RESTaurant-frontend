@@ -9,13 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@syncfusion/ej2-base": "^25.2.3",
-    "@syncfusion/ej2-react-buttons": "^25.2.3",
-    "@syncfusion/ej2-react-calendars": "^25.2.3",
-    "@syncfusion/ej2-react-dropdowns": "^25.2.3",
-    "@syncfusion/ej2-react-grids": "^25.2.3",
-    "@syncfusion/ej2-react-inputs": "^25.2.3",
-    "@syncfusion/ej2-react-schedule": "^25.2.3",
     "next": "14.1.4",
     "next-auth": "^5.0.0-beta.3",
     "react": "^18",

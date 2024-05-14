@@ -1,50 +1,125 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import { useAppContext } from "@/context";
+import { useEffect, useState } from "react";
+import { getAvailableSchedules, getUserSchedules, cancelScheduleSlot, bookScheduleSlot, updateScheduleSlotQuantity} from "@/services";
+import ScheduleBook from "@/components/scheduleBook/ScheduleBook";
+import ScheduleCancel from "@/components/scheduleCancel/ScheduleCancel";
 import styles from "./reservations.module.css";
 const basePath = process.env.basePath;
-import { getReservation } from "@/services";
-import {
-  Week, Month, Agenda, ScheduleComponent, ViewsDirective, ViewDirective, EventSettingsModel, ResourcesDirective, ResourceDirective, Inject, Resize, DragAndDrop
-} from '@syncfusion/ej2-react-schedule';
-import { timelineResourceData } from './datasource';
-
-import { registerLicense } from "@syncfusion/ej2-base";
-registerLicense(
-  "ORg4AjUWIQA/Gnt2UFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5WdkxhWH5bc3JRQGJf"
-);
+import Image from "next/image";
 
 const Reservations = () => {
-  const eventSettings = { dataSource: timelineResourceData };
-  const group = { byGroupID: false, resources: ['Projects', 'Categories'] };
+  const [scheduleBookData, setScheduleBookData] = useState(null);
+  const [scheduleCancelData, setScheduleCancelData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { showAlert } = useAppContext();
 
-  const projectData = [
-    { text: 'Reservations', id: 1, color: '#cb6bb2' }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const bookData = await getAvailableSchedules();
+        const cancelData = await getUserSchedules("geogd.712@gmail.com");
+        setScheduleBookData(bookData);
+        setScheduleCancelData(cancelData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching schedule data:", error.message);
+        setError(error.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+
+    const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleBookAppointment = async (id) => {
+    try {
+        const peopleQuantity = parseInt(prompt("Please enter the number of people for the reservation:", "1"), 10);
+
+        if (isNaN(peopleQuantity) || peopleQuantity <= 0) {
+            alert("Please enter a valid number of people.");
+            return;
+        }
+
+        const isConfirmed = window.confirm("Are you sure you want to book this reservation?");
+
+        if (isConfirmed) {
+            await bookScheduleSlot("geogd.712@gmail.com", id, peopleQuantity);
+            console.log("Booked reservation with ID:", id);
+        }
+    } catch (error) {
+        console.error("Failed to book reservation with ID:", id, error);
+    }
+};
+
+const handleEditAppointment = async (id, userid) => {
+  try {
+      const newQuantity = parseInt(prompt("Please enter the new quantity for the appointment:", "1"), 10);
+
+      if (isNaN(newQuantity) || newQuantity <= 0) {
+          alert("Please enter a valid number for the new quantity.");
+          return;
+      }
+
+      const isConfirmed = window.confirm("Are you sure you want to update the quantity for this appointment?");
+
+      if (isConfirmed) {
+          await updateScheduleSlotQuantity(id, newQuantity, userid);
+          console.log("Appointment with ID:", id, "updated successfully.");
+      }
+  } catch (error) {
+      console.error("Failed to update appointment with ID:", id, error);
+  }
+};
+
+  
+  const handleCancelAppointment = async (id, userid) => {
+    const isConfirmed = window.confirm("Are you sure you want to cancel this reservation?");
+    if (isConfirmed) {
+      try {
+        await cancelScheduleSlot(id, userid);
+        console.log("Booked reservation with ID:", id, "and user ID:", userid, "cancelled successfully.");
+      } catch (error) {
+        console.error("Failed to cancel booked reservation with ID:", id, error);
+      }
+    }
+  };
+
+  const handleRetry = () => {
+    setIsLoading(true);
+    setError(null);
+    fetchData();
+  };
+
+  if (isLoading) return <div className={styles.loading}>Loading...</div>;
+  if (error) return <div>Error: {error}<button onClick={handleRetry}>Retry</button></div>;
+  if (!scheduleBookData || !scheduleCancelData) return null;
 
   return (
-  <div className={styles.container}>
-    <div className={styles.formContainer}>
-      <div className={styles.titleContainer}>Do you want to make a reservation?</div>
-      <div className={styles.agendaContainer}>
-      <ScheduleComponent width='75%' height='450px' currentView='Week' selectedDate={new Date()} eventSettings={eventSettings} group={group} >
-        <ViewsDirective>
-          <ViewDirective option='Week' />
-          <ViewDirective option='Month' />
-          <ViewDirective option='Agenda' />
-        </ViewsDirective>
-        <ResourcesDirective>
-          <ResourceDirective field='ProjectId' title='Choose Project' name='Projects' allowMultiple={false}
-            dataSource={projectData} textField='text' idField='id' colorField='color'>
-          </ResourceDirective>
-        </ResourcesDirective>
-        <Inject services={[Week, Month, Agenda, Resize, DragAndDrop]} />
-      </ScheduleComponent>
+    <div className={styles.container}>
+      <div className={styles.contentContainer}>
+        <div className={styles.scheduleContainer}>
+          <h2>Available Slots</h2>
+          <div className={styles.scrollableContainer}>
+            <ScheduleBook appointments={scheduleBookData} onBook={handleBookAppointment} />
+          </div>
+        </div>
+      </div>
+      <div className={styles.contentContainer}>
+        <div className={styles.scheduleContainer}>
+          <h2>Reserved Slots</h2>
+          <div className={styles.scrollableContainer}>
+            <ScheduleCancel appointments={scheduleCancelData} onCancel={handleCancelAppointment} onEdit={handleEditAppointment} />
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-  </div>
-);
-  
-}
+  );
+};
 
 export default Reservations;
