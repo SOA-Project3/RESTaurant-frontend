@@ -24,7 +24,7 @@
 }
 
 .error {
-  color: coral;
+  color: var(--alert);
   font-size: 18px;
 }
 
