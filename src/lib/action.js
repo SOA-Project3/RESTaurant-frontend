@@ -59,7 +59,7 @@ export const login = async (prevState, formData) => {
     const session = await getIronSession(cookies(), sessionOptions);
 
     // set session properties
-    session.userId = user.Id;
+    session.userId = user.Id; //email
     session.name = user.Fullname;
     session.password = user.Password;
     session.isLoggedIn = true;

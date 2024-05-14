@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 20%;
+}
+
+.imgContainer {
+  flex: 1;
+  height: 300px;
+  position: relative;
+}
+
+.img {
+  object-fit: contain;
+}
+
+.titleContainer {
+  flex: 1;
+}
+
+.formContainer {
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+}
+
+.titleContainer {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.responseContainer {
+  flex: 1;
+  margin-top: 30px;
+  font-size: 18px;
+}
+
+.form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form input {
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  background-color: var(--bgSoft);
+  color: var(--text);
+}
+
+.form button {
+  padding: 20px;
+  background-color: var(--btn);
+  color: var(--text);
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.agendaContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.eventTemplate {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.details {
+  font-size: 14px;
+}
+
+.time {
+  display: block;
+}
+
+.maxPeople {
+  display: block;
+  margin-top: 5px;
+}
+
+.customEventEditor {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f8f8f8;
+}
+
+.customDateTimePicker,
+.customDropdown {
+  width: 100%;
+}
+
+.scheduleContainer {
+  width: 100%; /* Adjust width as needed */
+  height: 450px; /* Adjust height as needed */
+  border-radius: 10px; /* Round borders */
+  overflow: hidden; /* Hide overflow */
+}
+
+.scrollableContainer {
+  height: 100%; /* Ensure the scrollable container fills the parent */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.scheduleList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.appointmentItem {
+  margin-bottom: 20px; /* Add margin to the bottom of each list item */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}
