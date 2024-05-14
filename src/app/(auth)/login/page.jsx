@@ -7,7 +7,7 @@ const Login = async () => {
   const session = await getSession();
 
   if (session.isLoggedIn) {
-    redirect("/");
+    redirect("/profile");
   }
 
   return (
