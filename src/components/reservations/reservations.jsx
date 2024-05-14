@@ -65,7 +65,7 @@ const Reservations = () => {
           const updatedCancelData = await getUserSchedules(session.userId);
           setScheduleBookData(updatedBookData);
           setScheduleCancelData(updatedCancelData);
-        }, 2000); // 2 seconds delay
+        }, 6000); // 2 seconds delay
       }
     } catch (error) {
       console.error("Failed to book reservation with ID:", id, error);
@@ -96,7 +96,7 @@ const Reservations = () => {
           const updatedCancelData = await getUserSchedules(session.userId);
           setScheduleBookData(updatedBookData);
           setScheduleCancelData(updatedCancelData);
-        }, 2000); // 2 seconds delay
+        }, 6000); // 2 seconds delay
       }
     } catch (error) {
       console.error("Failed to update appointment with ID:", id, error);
@@ -122,7 +122,7 @@ const Reservations = () => {
           const updatedCancelData = await getUserSchedules(session.userId);
           setScheduleBookData(updatedBookData);
           setScheduleCancelData(updatedCancelData);
-        }, 2000); // 2 seconds delay
+        }, 6000); // 2 seconds delay
       } catch (error) {
         console.error("Failed to cancel booked reservation with ID:", id, error);
       }
