@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 
 const NavLink = ({ item }) => {
   const pathName = usePathname();
-  const basePath = process.env.basePath || "";
-  const path = basePath ? `${basePath}${item.path}` : item.path;
+  const path = item.path;
   return (
     <Link
       href={path}

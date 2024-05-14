@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import styles from "./reservations.module.css";
-const basePath = process.env.basePath;
 import { getSession } from "@/lib/action";
 import ReservationForm from "@/components/reservationForm/reservationForm";
 import { redirect } from "next/navigation";
@@ -16,12 +15,7 @@ const Reservations = async () => {
   return (
     <div className={styles.container}>
       <div className={styles.imgContainer}>
-        <Image
-          src={`${basePath}/timer.svg`}
-          alt=""
-          fill
-          className={styles.img}
-        />
+        <Image src={"/timer.svg"} alt="" fill className={styles.img} />
       </div>
       <ReservationForm />
     </div>

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./recommendations.module.css";
 import { useAppContext } from "@/context";
-const basePath = process.env.basePath;
 import { getMenu, getRecommendation } from "@/services";
 
 const Recommendations = () => {
@@ -99,12 +98,7 @@ const Recommendations = () => {
   return (
     <div className={styles.container}>
       <div className={styles.imgContainer}>
-        <Image
-          src={`${basePath}/chef.svg`}
-          alt=""
-          fill
-          className={styles.img}
-        />
+        <Image src={"/chef.svg"} alt="" fill className={styles.img} />
       </div>
       {!!options && (
         <div className={styles.formContainer}>
