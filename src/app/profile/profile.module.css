@@ -1,0 +1,39 @@
+.title {
+  margin-bottom: 20px;
+  font-size: larger;
+}
+
+.form {
+  margin: 20px 0px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input {
+  padding: 12px;
+  background-color: var(--bgSoft);
+  color: var(--textColor);
+  border: none;
+  border-radius: 5px;
+}
+
+.updateBtn {
+  padding: 12px;
+  cursor: pointer;
+  background-color: var(--btn);
+  color: var(--textColor);
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+}
+
+.deleteBtn {
+  margin-top: 20px;
+  padding: 10px;
+  cursor: pointer;
+  background-color: var(--alert);
+  color: var(--text);
+  border-radius: 20px;
+  border: none;
+}

@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+}
+
+.imgContainer {
+  flex: 1;
+  height: 300px;
+  position: relative;
+}
+
+.img {
+  object-fit: contain;
+}
+
+.titleContainer {
+  flex: 1;
+}
+
+.formContainer {
+  flex: 1;
+}
+
+.titleContainer {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.responseContainer {
+  flex: 1;
+  margin-top: 30px;
+  font-size: 18px;
+}
+
+.form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form input {
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  background-color: var(--bgSoft);
+  color: var(--text);
+}
+
+.form button {
+  padding: 20px;
+  background-color: var(--btn);
+  color: var(--text);
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}

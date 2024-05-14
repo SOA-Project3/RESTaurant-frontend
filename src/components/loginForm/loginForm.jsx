@@ -12,8 +12,13 @@ const LoginForm = () => {
     <form className={styles.form} action={formAction}>
       <input type="text" placeholder="Email" name="email" />
       <input type="password" placeholder="Password" name="password" />
-      <button>Iniciar sesión</button>
-      {state?.error}
+      <div className={styles.forgotWrapper}>
+        <Link className={styles.forgot} href="/forgot">
+          Forgot your password?
+        </Link>
+      </div>
+      <button>Login</button>
+      {<p className={styles.error}>{state?.error}</p>}
       <Link href="/register">
         {"Don't have an account?"} <b>Register</b>
       </Link>
