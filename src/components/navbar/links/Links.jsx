@@ -36,8 +36,8 @@ const Links = ({ session }) => {
 
   const adminLinks = [
     {
-      title: "Agenda",
-      path: "/agenda",
+      title: "Schedule",
+      path: "/schedule",
     },
     {
       title: "New Admins",

@@ -1,0 +1,75 @@
+.scheduleContainer {
+  margin-bottom: 20px; /* Add margin to the bottom of the container */
+  width: 100%;
+}
+
+.scheduleList {
+  list-style: none;
+  padding: 0;
+}
+
+.appointmentItem {
+  margin-bottom: 20px; /* Add margin to the bottom of each list item */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 350px; /* Adjust the width as needed */
+  margin-bottom: 10px; /* Add margin for spacing between items */
+  position: relative; /* Set position relative for absolute positioning */
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f; /* Darker Red */
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px; /* Adjust this gap as needed */
+}
+
+.editButton {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #1b6b09; /* Green */
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
