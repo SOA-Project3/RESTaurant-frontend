@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { postRegister, getUser } from "@/services";
+import { postRegister, getUser, resetPassword } from "@/services";
 import bcrypt from "bcryptjs";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
@@ -47,11 +47,8 @@ export const login = async (prevState, formData) => {
     // compare password with hashed
     const isPasswordCorrect = await bcrypt.compare(password, user.Password);
 
-    console.log("Logging in user: ", email, password);
-
     // validate password
     if (!isPasswordCorrect) return { error: "Incorrect password" };
-    console.log(user);
 
     // get current session
     const session = await getIronSession(cookies(), sessionOptions);
@@ -122,3 +119,24 @@ async function encryptPassword(password) {
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
 }
+
+/**
+ * Triggers password recovery function that sends an email with temp password
+ */
+export const handleForgot = async (previousState, formData) => {
+  // get form data
+  const { email } = Object.fromEntries(formData);
+
+  // email validation
+  if (!email) return { error: "Email is required!" };
+  try {
+    // create new password and send it via email
+    await resetPassword(email);
+
+    return { success: true };
+  } catch (err) {
+    console.log(err);
+    // show error in UI
+    return { error: err.toString() };
+  }
+};

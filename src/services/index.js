@@ -6,10 +6,15 @@ import {
   SUGGESTIONS_URL,
   REGISTER_URL,
   LOGIN_URL,
-  BAD_REQUEST,
   GET_USER_URL,
+  RESET_PWD_URL,
 } from "@/constants";
 
+/**
+ * Parse response data to handle success or error
+ * @param {*} response
+ * @returns
+ */
 async function handleResponse(response) {
   if (response.ok) {
     const data = await response.json();
@@ -20,6 +25,10 @@ async function handleResponse(response) {
   }
 }
 
+/**
+ * Fetch whole menu data
+ * @returns
+ */
 export const getMenu = async () => {
   try {
     const response = await fetch(MENU_URL);
@@ -31,6 +40,11 @@ export const getMenu = async () => {
   }
 };
 
+/**
+ * Post user feedback to chatbot service
+ * @param {*} feedback
+ * @returns
+ */
 export const postFeedback = async (feedback) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -101,6 +115,9 @@ export const getRecommendation = async (meal, drink, dessert) => {
   }
 };
 
+/**
+ * Register new user to DB
+ */
 export const postRegister = async (name, email, password, role) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -130,6 +147,12 @@ export const postRegister = async (name, email, password, role) => {
   }
 };
 
+/**
+ * Handle user login
+ * @param {*} email
+ * @param {*} password
+ * @returns
+ */
 export const postLogin = async (email, password) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -156,6 +179,11 @@ export const postLogin = async (email, password) => {
   }
 };
 
+/**
+ * Fetch user data by email
+ * @param {string} email
+ * @returns
+ */
 export const getUser = async (email) => {
   const requestOptions = {
     method: "GET",
@@ -169,6 +197,24 @@ export const getUser = async (email) => {
     return result;
   } catch (error) {
     console.error("Error fetching suggestions:", error);
+    throw error;
+  }
+};
+
+export const resetPassword = async (email) => {
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
+  try {
+    const response = await fetch(
+      `${RESET_PWD_URL}?Id=${email}`,
+      requestOptions
+    );
+    const result = await handleResponse(response);
+    return result;
+  } catch (error) {
+    console.error("Error resetting password:", error);
     throw error;
   }
 };

@@ -9,6 +9,4 @@ export const SEND_FEEDBACK_URL = `${BASE_URL}/sendFeedback`;
 export const REGISTER_URL = `${BASE_URL}/register`;
 export const LOGIN_URL = `${BASE_URL}/login`;
 export const GET_USER_URL = `${BASE_URL}/getUserById`;
-
-//statud code
-export const BAD_REQUEST = 400;
+export const RESET_PWD_URL = `${BASE_URL}/resetPassword`;
