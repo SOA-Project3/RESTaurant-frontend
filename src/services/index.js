@@ -292,15 +292,20 @@ export const updateScheduleSlotQuantity = async (scheduleSlotId, peopleQuantity,
 };
 
 export const createScheduleSlot = async (datetime) => {
-  const url = `http://us-central1-soa-gr6-p3.cloudfunctions.net/backend/createScheduleSlot?datetime=${datetime}`;
+  const url = `http://us-central1-soa-gr6-p3.cloudfunctions.net/backend/createScheduleSlot`;
+
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    "datetime": datetime
+  });
 
   const requestOptions = {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ datetime }),
-    redirect: "follow",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow"
   };
 
   try {
