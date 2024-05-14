@@ -108,6 +108,40 @@ export const registerUser = async (previousState, formData) => {
 };
 
 /**
+ * Register new admin user
+ * @param {*} previousState
+ * @param {Object} formData
+ * @returns
+ */
+export const registerAdmin = async (previousState, formData) => {
+  // get form data
+  const { name, email, password, passwordRepeat } =
+    Object.fromEntries(formData);
+
+  // form validations
+  if (!name) return { error: "Name is required!" };
+  if (!email) return { error: "Email is required!" };
+  if (!password) return { error: "Password is required!" };
+  if (password !== passwordRepeat) return { error: "Passwords do not match!" };
+
+  try {
+    //encrypt password
+    const hashedPassword = await encryptPassword(password);
+
+    // register new user
+    console.log("Registering admin: ", name, email, hashedPassword);
+    await postRegister(name, email, hashedPassword, "Admin");
+    console.log("Admin registered successfully...");
+
+    return { success: true };
+  } catch (err) {
+    console.log(err);
+    // show error in UI
+    return { error: err.toString() };
+  }
+};
+
+/**
  * Destroy session to logout user
  */
 export const handleLogout = async () => {

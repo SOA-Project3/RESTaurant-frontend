@@ -34,6 +34,17 @@ const Links = ({ session }) => {
     },
   ];
 
+  const adminLinks = [
+    {
+      title: "Agenda",
+      path: "/agenda",
+    },
+    {
+      title: "New Admins",
+      path: "/new-admins",
+    },
+  ];
+
   return (
     <div className={styles.links}>
       {defaultLinks.map((link) => (
@@ -44,9 +55,8 @@ const Links = ({ session }) => {
           {loggedInLinks.map((link) => (
             <NavLink item={link} key={link.title} />
           ))}
-          {session.isAdmin && (
-            <NavLink item={{ title: "Agenda", path: "/agenda" }} />
-          )}
+          {session.isAdmin &&
+            adminLinks.map((link) => <NavLink item={link} key={link.title} />)}
           <NavLink item={{ title: "Profile", path: "/profile" }} />
           <LogoutForm />
         </>

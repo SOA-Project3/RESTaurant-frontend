@@ -1,19 +1,18 @@
 "use client";
 
-import { registerUser } from "@/lib/action";
 import styles from "./registerForm.module.css";
 import { useFormState } from "react-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
-const RegisterForm = () => {
-  const [state, formAction] = useFormState(registerUser, undefined);
-
+const RegisterForm = ({ registerAction, redirect }) => {
+  const [state, formAction] = useFormState(registerAction, undefined);
+  const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    state?.success && router.push("/login");
+    if (state?.success && !!redirect) router.push("/login");
+    if (state?.success) setShowSuccess(true);
   }, [state?.success, router]);
 
   return (
@@ -28,9 +27,7 @@ const RegisterForm = () => {
       />
       <button>Register</button>
       {<p className={styles.error}>{state?.error}</p>}
-      <Link href="/login">
-        Already have an account? <b>Login</b>
-      </Link>
+      {!!showSuccess && <p>New account registered successfully</p>}
     </form>
   );
 };
