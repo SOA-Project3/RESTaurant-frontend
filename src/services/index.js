@@ -307,7 +307,7 @@ export const updateScheduleSlotQuantity = async (scheduleSlotId, peopleQuantity,
 };
 
 export const createScheduleSlot = async (datetime) => {
-  const url = `http://us-central1-soa-gr6-p3.cloudfunctions.net/backend/createScheduleSlot`;
+  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/createScheduleSlot`;
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
