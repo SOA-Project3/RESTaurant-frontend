@@ -346,10 +346,9 @@ export const createScheduleSlot = async (datetime) => {
  */
 export const postRegister = async (name, email, password, role) => {
   const myHeaders = new Headers();
-  const {Iv, Password} = encrypt(password);
+  const encryptedpassword = encryptPassword(password);
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Iv", Iv);
-  myHeaders.append("Password", Password);
+  myHeaders.append("Password", encryptedpassword);
 
   const raw = JSON.stringify({
     Id: email,
@@ -383,10 +382,9 @@ export const postRegister = async (name, email, password, role) => {
  */
 export const postLogin = async (email, password) => {
   const myHeaders = new Headers();
-  const {Iv, Password} = encrypt(password);
+  const encryptedpassword = encryptPassword(password);
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Iv", Iv);
-  myHeaders.append("Password", Password);
+  myHeaders.append("Password", encryptedpassword);
 
   const raw = JSON.stringify({
     Id: email,

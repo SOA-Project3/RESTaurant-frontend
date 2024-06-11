@@ -1,16 +1,17 @@
 const crypto = require('crypto');
 
-const algorithm = 'aes-256-cbc'; // Using AES encryption
-const key = crypto.randomBytes(32); // Generate a 32 byte key
-const iv = crypto.randomBytes(16); // Generate a 16 byte IV
+const key = Buffer.from('97345688501354567590123456789012', 'utf8'); // 32-byte key
+const iv = Buffer.from('9464567890123457', 'utf8'); // 16-byte IV
 
-function encrypt(text) {
-  let cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { Iv: iv.toString('hex'), Password: encrypted.toString('hex') };
+
+// Encrypt a password
+function encryptPassword(password) {
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+  let encrypted = cipher.update(password, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
 }
 
 module.export = {
-    encrypt
+  encryptPassword
 };
