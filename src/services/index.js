@@ -12,6 +12,8 @@ import {
   DELETE_ACCOUNT_URL,
 } from "@/constants";
 
+const passwordEncrypter = require('../helpers/encryption')
+
 /**
  * Parse response data to handle success or error
  * @param {*} response
@@ -347,13 +349,14 @@ export const createScheduleSlot = async (datetime) => {
  */
 export const postRegister = async (name, email, password, role) => {
   const myHeaders = new Headers();
+  const encryptedpassword = encryptPassword(password);
   myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Password", encryptedpassword);
 
   const raw = JSON.stringify({
     Id: email,
     Fullname: name,
     Rol: role,
-    Password: password,
   });
 
   const requestOptions = {
@@ -382,11 +385,12 @@ export const postRegister = async (name, email, password, role) => {
  */
 export const postLogin = async (email, password) => {
   const myHeaders = new Headers();
+  const encryptedpassword = encryptPassword(password);
   myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Password", encryptedpassword);
 
   const raw = JSON.stringify({
     Id: email,
-    Password: password,
   });
 
   const requestOptions = {
