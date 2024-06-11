@@ -8,7 +8,7 @@ function encrypt(text) {
   let cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
+  return { Iv: iv.toString('hex'), Password: encrypted.toString('hex') };
 }
 
 module.export = {
