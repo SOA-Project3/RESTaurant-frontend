@@ -11,18 +11,23 @@ import ScheduleDelBooked from "@/components/scheduleDelBooked/ScheduleDelBooked"
 import ScheduleDelAvailable from "@/components/scheduleDelAvailable/ScheduleDelAvailable";
 import ScheduleForm from "@/components/scheduleForm/ScheduleForm";
 import styles from "./schedule.module.css";
+import { getSession } from "@/lib/action";
 
 const Schedule = () => {
   const [scheduleAvailableData, setScheduleAvailableData] = useState(null);
   const [scheduleBookedData, setScheduleBookedData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const availableData = await getAvailableSchedules();
-        const bookedData = await getBookedSchedules();
+        const sess = await getSession();
+        setSession(sess);
+        const availableData = await getAvailableSchedules(sess.jwt);
+        const bookedData = await getBookedSchedules(sess.jwt);
+        console.log("Available data:", availableData);
         setScheduleAvailableData(availableData);
         setScheduleBookedData(bookedData);
         setIsLoading(false);
@@ -43,11 +48,11 @@ const Schedule = () => {
     if (isConfirmed) {
       try {
         const datetime = `${date.toISOString().slice(0, 10)}T${time}:00`;
-        await createScheduleSlot(datetime);
+        await createScheduleSlot(datetime, session.branch, session.jwt);
         console.log("Appointment added successfully.");
         setTimeout(async () => {
-          const updateAvailableData = await getAvailableSchedules();
-          const updateBookedData = await getBookedSchedules();
+          const updateAvailableData = await getAvailableSchedules(session.jwt);
+          const updateBookedData = await getBookedSchedules(session.jwt);
           setScheduleAvailableData(updateAvailableData);
           setScheduleBookedData(updateBookedData);
         }, 6000);
@@ -56,27 +61,26 @@ const Schedule = () => {
       }
     }
   };
-  
+
   const handleDeleteAppointment = async (id) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this available slot?"
     );
     if (isConfirmed) {
       try {
-        await deleteScheduleSlot(id);
+        await deleteScheduleSlot(id, session.jwt);
         console.log("Available slot with ID:", id, "deleted successfully.");
         setTimeout(async () => {
-          const updateAvailableData = await getAvailableSchedules();
-          const updateBookedData = await getBookedSchedules();
+          const updateAvailableData = await getAvailableSchedules(session.jwt);
+          const updateBookedData = await getBookedSchedules(session.jwt);
           setScheduleAvailableData(updateAvailableData);
           setScheduleBookedData(updateBookedData);
-        }, 6000); 
+        }, 6000);
       } catch (error) {
         console.error("Failed to delete available slot with ID:", id, error);
       }
     }
   };
-  
 
   const handleRetry = () => {
     setIsLoading(true);
@@ -106,6 +110,7 @@ const Schedule = () => {
             <ScheduleDelBooked
               appointments={scheduleBookedData}
               onDelete={handleDeleteAppointment}
+              branch={session.branch}
             />
           </div>
         </div>
@@ -117,6 +122,7 @@ const Schedule = () => {
             <ScheduleDelAvailable
               appointments={scheduleAvailableData}
               onDelete={handleDeleteAppointment}
+              branch={session.branch}
             />
           </div>
         </div>

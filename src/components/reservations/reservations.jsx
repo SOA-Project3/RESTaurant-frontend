@@ -26,8 +26,8 @@ const Reservations = () => {
         const sess = await getSession();
         setSession(sess); //set state to handle session
 
-        const bookData = await getAvailableSchedules();
-        const cancelData = await getUserSchedules(sess.userId);
+        const bookData = await getAvailableSchedules(sess.jwt);
+        const cancelData = await getUserSchedules(sess.userId, sess.jwt);
         setScheduleBookData(bookData);
         setScheduleCancelData(cancelData);
         setIsLoading(false);
@@ -38,7 +38,7 @@ const Reservations = () => {
       }
     };
 
-    fetchData();;
+    fetchData();
   }, []);
 
   const handleBookAppointment = async (id) => {
@@ -47,22 +47,25 @@ const Reservations = () => {
         prompt("Please enter the number of people for the reservation:", "1"),
         10
       );
-  
+
       if (isNaN(peopleQuantity) || peopleQuantity <= 0) {
         alert("Please enter a valid number of people.");
         return;
       }
-  
+
       const isConfirmed = window.confirm(
         "Are you sure you want to book this reservation?"
       );
-  
+
       if (isConfirmed) {
-        await bookScheduleSlot(session.userId, id, peopleQuantity);
+        await bookScheduleSlot(session.userId, id, peopleQuantity, session.jwt);
         console.log("Booked reservation with ID:", id);
         setTimeout(async () => {
-          const updatedBookData = await getAvailableSchedules();
-          const updatedCancelData = await getUserSchedules(session.userId);
+          const updatedBookData = await getAvailableSchedules(session.jwt);
+          const updatedCancelData = await getUserSchedules(
+            session.userId,
+            session.jwt
+          );
           setScheduleBookData(updatedBookData);
           setScheduleCancelData(updatedCancelData);
         }, 6000); // 2 seconds delay
@@ -71,29 +74,32 @@ const Reservations = () => {
       console.error("Failed to book reservation with ID:", id, error);
     }
   };
-  
+
   const handleEditAppointment = async (id, userid) => {
     try {
       const newQuantity = parseInt(
         prompt("Please enter the new quantity for the appointment:", "1"),
         10
       );
-  
+
       if (isNaN(newQuantity) || newQuantity <= 0) {
         alert("Please enter a valid number for the new quantity.");
         return;
       }
-  
+
       const isConfirmed = window.confirm(
         "Are you sure you want to update the quantity for this appointment?"
       );
-  
+
       if (isConfirmed) {
-        await updateScheduleSlotQuantity(id, newQuantity, userid);
+        await updateScheduleSlotQuantity(id, newQuantity, userid, session.jwt);
         console.log("Appointment with ID:", id, "updated successfully.");
         setTimeout(async () => {
-          const updatedBookData = await getAvailableSchedules();
-          const updatedCancelData = await getUserSchedules(session.userId);
+          const updatedBookData = await getAvailableSchedules(session.jwt);
+          const updatedCancelData = await getUserSchedules(
+            session.userId,
+            session.jwt
+          );
           setScheduleBookData(updatedBookData);
           setScheduleCancelData(updatedCancelData);
         }, 6000); // 2 seconds delay
@@ -102,14 +108,14 @@ const Reservations = () => {
       console.error("Failed to update appointment with ID:", id, error);
     }
   };
-  
+
   const handleCancelAppointment = async (id, userid) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to cancel this reservation?"
     );
     if (isConfirmed) {
       try {
-        await cancelScheduleSlot(id, userid);
+        await cancelScheduleSlot(id, userid, session.jwt);
         console.log(
           "Booked reservation with ID:",
           id,
@@ -118,17 +124,23 @@ const Reservations = () => {
           "cancelled successfully."
         );
         setTimeout(async () => {
-          const updatedBookData = await getAvailableSchedules();
-          const updatedCancelData = await getUserSchedules(session.userId);
+          const updatedBookData = await getAvailableSchedules(session.jwt);
+          const updatedCancelData = await getUserSchedules(
+            session.userId,
+            session.jwt
+          );
           setScheduleBookData(updatedBookData);
           setScheduleCancelData(updatedCancelData);
         }, 6000); // 2 seconds delay
       } catch (error) {
-        console.error("Failed to cancel booked reservation with ID:", id, error);
+        console.error(
+          "Failed to cancel booked reservation with ID:",
+          id,
+          error
+        );
       }
     }
   };
-  
 
   const handleRetry = () => {
     setIsLoading(true);

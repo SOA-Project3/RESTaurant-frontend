@@ -2,7 +2,7 @@
 
 import {
   postRegister,
-  getUser,
+  postLogin,
   resetPassword,
   deleteUser,
   setPassword,
@@ -46,24 +46,21 @@ export const login = async (prevState, formData) => {
     if (!email) return { error: "Email is required!" };
     if (!password) return { error: "Password is required!" };
 
-    // get user data by email
-    const user = await getUser(email);
-
-    // compare password with hashed
-    const isPasswordCorrect = await bcrypt.compare(password, user.Password);
-
-    // validate password
-    if (!isPasswordCorrect) return { error: "Incorrect password" };
+    // login user
+    const res = await postLogin(email, password);
+    if (res.error) return { error: res.error };
+    console.log(res);
 
     // get current session
     const session = await getIronSession(cookies(), sessionOptions);
 
     // set session properties
-    session.userId = user.Id; //email
-    session.name = user.Fullname;
-    session.password = user.Password;
+    session.userId = res.user.UserId;
+    session.name = res.user.Fullname;
     session.isLoggedIn = true;
-    session.isAdmin = user.Rol === "Admin";
+    session.isAdmin = res.user.Rol === "Admin";
+    session.branch = res.user.BranchId;
+    session.jwt = res.jwt;
 
     // save new session
     await session.save();
@@ -91,12 +88,9 @@ export const registerUser = async (previousState, formData) => {
   if (password !== passwordRepeat) return { error: "Passwords do not match!" };
 
   try {
-    //encrypt password
-    const hashedPassword = await encryptPassword(password);
-
     // register new user
-    console.log("Registering user: ", name, email, hashedPassword);
-    await postRegister(name, email, hashedPassword, "User");
+    console.log("Registering user: ", name, email, password);
+    await postRegister(name, email, password, "User");
     console.log("User registered successfully...");
 
     return { success: true };
@@ -125,12 +119,9 @@ export const registerAdmin = async (previousState, formData) => {
   if (password !== passwordRepeat) return { error: "Passwords do not match!" };
 
   try {
-    //encrypt password
-    const hashedPassword = await encryptPassword(password);
-
     // register new user
-    console.log("Registering admin: ", name, email, hashedPassword);
-    await postRegister(name, email, hashedPassword, "Admin");
+    console.log("Registering admin: ", name, email, password);
+    await postRegister(name, email, password, "Admin");
     console.log("Admin registered successfully...");
 
     return { success: true };
@@ -140,7 +131,6 @@ export const registerAdmin = async (previousState, formData) => {
     return { error: err.toString() };
   }
 };
-
 /**
  * Destroy session to logout user
  */
@@ -148,17 +138,6 @@ export const handleLogout = async () => {
   const session = await getIronSession(cookies(), sessionOptions);
   session.destroy();
 };
-
-/**
- * Encrypt password using hash algorithm with salt
- * @param {string} password
- * @returns
- */
-async function encryptPassword(password) {
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  return hashedPassword;
-}
 
 /**
  * Triggers password recovery function that sends an email with temp password
@@ -233,10 +212,11 @@ export const deleteAccount = async () => {
     // get user email
     const session = await getIronSession(cookies(), sessionOptions);
     const email = session.userId;
+    const jwt = session.jwt;
 
     try {
       // delete account service
-      await deleteUser(email);
+      await deleteUser(email, jwt);
 
       // remove session
       session.destroy();

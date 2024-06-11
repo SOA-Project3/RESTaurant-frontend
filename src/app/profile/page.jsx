@@ -18,12 +18,16 @@ const page = async () => {
       </p>
       <div>
         You are a{session.isAdmin ? "n " : " "}
-        <b>{session.isAdmin ? "admin" : " regular"}</b> user
+        <b>
+          {session.isAdmin
+            ? `admin of ${session.branch} branch`
+            : " regular user"}
+        </b>
       </div>
       <div>
         Your account email is <b>{session.userId}</b>
       </div>
-      <UpdatePwdForm />
+      {/* <UpdatePwdForm /> */}
       <form className={styles.form} action={deleteAccount}>
         <button className={styles.deleteBtn}>Delete account</button>
       </form>

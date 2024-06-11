@@ -28,20 +28,12 @@ const Links = ({ session }) => {
       title: "Reservations",
       path: "/reservations",
     },
-    {
-      title: "Give Feedback",
-      path: "/feedback",
-    },
   ];
 
   const adminLinks = [
     {
       title: "Schedule",
       path: "/schedule",
-    },
-    {
-      title: "New Admins",
-      path: "/new-admins",
     },
   ];
 
@@ -52,9 +44,10 @@ const Links = ({ session }) => {
       ))}
       {session?.isLoggedIn ? (
         <>
-          {loggedInLinks.map((link) => (
-            <NavLink item={link} key={link.title} />
-          ))}
+          {!session.isAdmin &&
+            loggedInLinks.map((link) => (
+              <NavLink item={link} key={link.title} />
+            ))}
           {session.isAdmin &&
             adminLinks.map((link) => <NavLink item={link} key={link.title} />)}
           <NavLink item={{ title: "Profile", path: "/profile" }} />

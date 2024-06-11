@@ -1,21 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: project4-deployment
+  name: frontend-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: project4
+      app: frontend
   template:
     metadata:
       labels:
-        app: project4 
+        app: frontend
     spec:
       containers:
-      - name: frontend
-        image: frontend:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 3000
-
+        - name: frontend
+          image: frontend:v0.8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: SECRET_KEY
+              value: "708b6d7d9b08d7e7f8b902d42f908821cd93d363e79851d5093c658823f98aec"

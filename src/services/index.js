@@ -10,9 +10,16 @@ import {
   RESET_PWD_URL,
   UPDATE_PWD_URL,
   DELETE_ACCOUNT_URL,
+  GET_ALL_SCHEDULED_URL,
+  GET_AVAILABLE_SLOTS_URL,
+  GET_USER_SCHEDULED_URL,
+  GET_BOOKED_SCHEDULES_URL,
+  DELETE_SCHEDULE_URL,
+  CANCEL_SCHEDULE_URL,
+  BOOK_SCHEDULE_URL,
+  UPDATE_QUANTITY_URL,
+  CREATE_SCHEDULE_URL,
 } from "@/constants";
-
-const passwordEncrypter = require('../helpers/encryption')
 
 /**
  * Parse response data to handle success or error
@@ -119,11 +126,18 @@ export const getRecommendation = async (meal, drink, dessert) => {
   }
 };
 
-export const getAllSchedule = async () => {
+export const getAllSchedule = async (jwt) => {
   try {
-    const response = await fetch(
-      "https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/allScheduleSlots"
-    );
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${jwt}`);
+
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: headers,
+    };
+    const response = await fetch(GET_ALL_SCHEDULED_URL, requestOptions);
+
     if (response.ok) {
       const allSchedule = await response.json();
       return allSchedule;
@@ -141,11 +155,18 @@ export const getAllSchedule = async () => {
   }
 };
 
-export const getAvailableSchedules = async () => {
+export const getAvailableSchedules = async (jwt) => {
   try {
-    const response = await fetch(
-      "https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/availableScheduleSlots"
-    );
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${jwt}`);
+
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: headers,
+    };
+    console.log("request");
+    const response = await fetch(GET_AVAILABLE_SLOTS_URL, requestOptions);
     if (response.ok) {
       const availableSchedule = await response.json();
       return availableSchedule;
@@ -163,16 +184,19 @@ export const getAvailableSchedules = async () => {
   }
 };
 
-export const getUserSchedules = async (userId) => {
+export const getUserSchedules = async (userId, jwt) => {
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwt}`);
+
   const requestOptions = {
     method: "GET",
     redirect: "follow",
+    headers: headers,
   };
 
-  let url =
-    "https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/userScheduleSlots?";
+  let url = GET_USER_SCHEDULED_URL;
 
-  if (!!userId) url += `userId=${userId}`;
+  if (!!userId) url += `?userId=${userId}`;
 
   try {
     const response = await fetch(url, requestOptions);
@@ -189,11 +213,17 @@ export const getUserSchedules = async (userId) => {
   }
 };
 
-export const getBookedSchedules = async () => {
+export const getBookedSchedules = async (jwt) => {
   try {
-    const response = await fetch(
-      "https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/bookedScheduleSlots"
-    );
+    const headers = new Headers();
+    headers.append("Authorization", `Bearer ${jwt}`);
+
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: headers,
+    };
+    const response = await fetch(GET_BOOKED_SCHEDULES_URL, requestOptions);
     if (response.ok) {
       const bookedSchedule = await response.json();
       return bookedSchedule;
@@ -211,13 +241,15 @@ export const getBookedSchedules = async () => {
   }
 };
 
-export const deleteScheduleSlot = async (scheduleSlotId) => {
-  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/deleteScheduleSlot?scheduleSlotId=${scheduleSlotId}`;
-  console.log("URL:", url);
+export const deleteScheduleSlot = async (scheduleSlotId, jwt) => {
+  const url = `${DELETE_SCHEDULE_URL}?scheduleSlotId=${scheduleSlotId}`;
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwt}`);
 
   const requestOptions = {
     method: "DELETE",
     redirect: "follow",
+    headers: headers,
   };
 
   try {
@@ -235,12 +267,16 @@ export const deleteScheduleSlot = async (scheduleSlotId) => {
   }
 };
 
-export const cancelScheduleSlot = async (scheduleSlotId, userId) => {
-  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/cancelScheduleSlot?scheduleSlotId=${scheduleSlotId}&userId=${userId}`;
+export const cancelScheduleSlot = async (scheduleSlotId, userId, jwt) => {
+  const url = `${CANCEL_SCHEDULE_URL}?scheduleSlotId=${scheduleSlotId}&userId=${userId}`;
+
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwt}`);
 
   const requestOptions = {
     method: "PUT",
     redirect: "follow",
+    headers: headers,
   };
 
   try {
@@ -261,13 +297,18 @@ export const cancelScheduleSlot = async (scheduleSlotId, userId) => {
 export const bookScheduleSlot = async (
   userId,
   scheduleSlotId,
-  peopleQuantity
+  peopleQuantity,
+  jwt
 ) => {
-  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/bookScheduleSlot?userId=${userId}&scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}`;
+  const url = `${BOOK_SCHEDULE_URL}?userId=${userId}&scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}`;
+
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwt}`);
 
   const requestOptions = {
     method: "PUT",
     redirect: "follow",
+    headers: headers,
   };
 
   try {
@@ -288,13 +329,18 @@ export const bookScheduleSlot = async (
 export const updateScheduleSlotQuantity = async (
   scheduleSlotId,
   peopleQuantity,
-  userId
+  userId,
+  jwt
 ) => {
-  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/updateScheduleSlotQuantity?scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}&userId=${userId}`;
+  const url = `${UPDATE_QUANTITY_URL}?scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}&userId=${userId}`;
+
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwt}`);
 
   const requestOptions = {
     method: "PUT",
     redirect: "follow",
+    headers: headers,
   };
 
   try {
@@ -312,19 +358,21 @@ export const updateScheduleSlotQuantity = async (
   }
 };
 
-export const createScheduleSlot = async (datetime) => {
-  const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/createScheduleSlot`;
+export const createScheduleSlot = async (datetime, branch, jwt) => {
+  const url = CREATE_SCHEDULE_URL;
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Authorization", `Bearer ${jwt}`);
 
   const raw = JSON.stringify({
     datetime: datetime,
+    branch: branch,
   });
 
   const requestOptions = {
     method: "POST",
-    headers: myHeaders,
+    headers: headers,
     body: raw,
     redirect: "follow",
   };
@@ -348,20 +396,20 @@ export const createScheduleSlot = async (datetime) => {
  * Register new user to DB
  */
 export const postRegister = async (name, email, password, role) => {
-  const myHeaders = new Headers();
-  const encryptedpassword = encryptPassword(password);
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Password", encryptedpassword);
+  const credentials = btoa(`${email}:${password}`); // Base64 encode the credentials
+
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Authorization", `Basic ${credentials}`);
 
   const raw = JSON.stringify({
-    Id: email,
     Fullname: name,
     Rol: role,
   });
 
   const requestOptions = {
     method: "POST",
-    headers: myHeaders,
+    headers: headers,
     body: raw,
     redirect: "follow",
   };
@@ -384,19 +432,15 @@ export const postRegister = async (name, email, password, role) => {
  * @returns
  */
 export const postLogin = async (email, password) => {
-  const myHeaders = new Headers();
-  const encryptedpassword = encryptPassword(password);
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Password", encryptedpassword);
+  const credentials = btoa(`${email}:${password}`); // Base64 encode the credentials
 
-  const raw = JSON.stringify({
-    Id: email,
-  });
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Authorization", `Basic ${credentials}`);
 
   const requestOptions = {
     method: "POST",
-    headers: myHeaders,
-    body: raw,
+    headers: headers,
     redirect: "follow",
   };
 
@@ -492,10 +536,14 @@ export const setPassword = async (email, password) => {
  * @param {*} email
  * @returns
  */
-export const deleteUser = async (email) => {
+export const deleteUser = async (email, jwt) => {
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${jwt}`);
+
   const requestOptions = {
-    method: "GET",
+    method: "DELETE",
     redirect: "follow",
+    headers: headers,
   };
   try {
     const response = await fetch(
