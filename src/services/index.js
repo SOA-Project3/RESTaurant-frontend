@@ -42,7 +42,6 @@ export const getMenu = async () => {
   }
 };
 
-
 /**
  * Post user feedback to chatbot service
  * @param {*} feedback
@@ -118,7 +117,6 @@ export const getRecommendation = async (meal, drink, dessert) => {
   }
 };
 
-
 export const getAllSchedule = async () => {
   try {
     const response = await fetch(
@@ -161,33 +159,32 @@ export const getAvailableSchedules = async () => {
     // Handle network errors or other fetch errors
     throw new Error(`Network error: ${error.message}`);
   }
-}
-
+};
 
 export const getUserSchedules = async (userId) => {
   const requestOptions = {
-  method: "GET",
-  redirect: "follow",
-};
+    method: "GET",
+    redirect: "follow",
+  };
 
-let url =
-  "https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/userScheduleSlots?";
+  let url =
+    "https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/userScheduleSlots?";
 
-if (!!userId) url += `userId=${userId}`;
+  if (!!userId) url += `userId=${userId}`;
 
-try {
-  const response = await fetch(url, requestOptions);
+  try {
+    const response = await fetch(url, requestOptions);
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error fetching user schedule:", error);
+    throw error; // Re-throw the error so the caller can handle it
   }
-
-  const result = await response.json();
-  return result;
-} catch (error) {
-  console.error("Error fetching user schedule:", error);
-  throw error; // Re-throw the error so the caller can handle it
-}
 };
 
 export const getBookedSchedules = async () => {
@@ -210,11 +207,11 @@ export const getBookedSchedules = async () => {
     // Handle network errors or other fetch errors
     throw new Error(`Network error: ${error.message}`);
   }
-}
+};
 
 export const deleteScheduleSlot = async (scheduleSlotId) => {
   const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/deleteScheduleSlot?scheduleSlotId=${scheduleSlotId}`;
-  console.log("URL:", url)
+  console.log("URL:", url);
 
   const requestOptions = {
     method: "DELETE",
@@ -235,7 +232,6 @@ export const deleteScheduleSlot = async (scheduleSlotId) => {
     throw error; // Re-throw the error so the caller can handle it
   }
 };
-
 
 export const cancelScheduleSlot = async (scheduleSlotId, userId) => {
   const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/cancelScheduleSlot?scheduleSlotId=${scheduleSlotId}&userId=${userId}`;
@@ -260,7 +256,11 @@ export const cancelScheduleSlot = async (scheduleSlotId, userId) => {
   }
 };
 
-export const bookScheduleSlot = async (userId, scheduleSlotId, peopleQuantity) => {
+export const bookScheduleSlot = async (
+  userId,
+  scheduleSlotId,
+  peopleQuantity
+) => {
   const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/bookScheduleSlot?userId=${userId}&scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}`;
 
   const requestOptions = {
@@ -283,7 +283,11 @@ export const bookScheduleSlot = async (userId, scheduleSlotId, peopleQuantity) =
   }
 };
 
-export const updateScheduleSlotQuantity = async (scheduleSlotId, peopleQuantity, userId) => {
+export const updateScheduleSlotQuantity = async (
+  scheduleSlotId,
+  peopleQuantity,
+  userId
+) => {
   const url = `https://us-central1-soa-gr6-p3.cloudfunctions.net/backend/updateScheduleSlotQuantity?scheduleSlotId=${scheduleSlotId}&peopleQuantity=${peopleQuantity}&userId=${userId}`;
 
   const requestOptions = {
@@ -313,14 +317,14 @@ export const createScheduleSlot = async (datetime) => {
   myHeaders.append("Content-Type", "application/json");
 
   const raw = JSON.stringify({
-    "datetime": datetime
+    datetime: datetime,
   });
 
   const requestOptions = {
     method: "POST",
     headers: myHeaders,
     body: raw,
-    redirect: "follow"
+    redirect: "follow",
   };
 
   try {
@@ -337,7 +341,6 @@ export const createScheduleSlot = async (datetime) => {
     throw error; // Re-throw the error so the caller can handle it
   }
 };
-
 
 /**
  * Register new user to DB
@@ -450,9 +453,9 @@ export const resetPassword = async (email) => {
 
 /**
  * Set a new password
- * @param {*} email 
- * @param {*} password 
- * @returns 
+ * @param {*} email
+ * @param {*} password
+ * @returns
  */
 export const setPassword = async (email, password) => {
   const myHeaders = new Headers();
@@ -478,7 +481,7 @@ export const setPassword = async (email, password) => {
     console.error("Error updating user password:", error);
     throw error;
   }
-}
+};
 
 /**
  * Remove user from DB

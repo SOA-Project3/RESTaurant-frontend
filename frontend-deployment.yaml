@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project4-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: project4
+  template:
+    metadata:
+      labels:
+        app: project4 
+    spec:
+      containers:
+      - name: frontend
+        image: frontend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+
